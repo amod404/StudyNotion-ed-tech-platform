@@ -33,14 +33,13 @@ const courseSchema = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    //it dhould be an array , lets see how our tags model will be defined
+    //it should be an array , lets see how our tags model will be defined
     tag:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Tag,"
     },
-    studentEnrolled:[{
+    studentsEnrolled:[{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
         ref:"User",
     }]
 });
