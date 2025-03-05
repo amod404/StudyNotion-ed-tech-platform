@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Define the Tags schema
+// Define the category schema
 const categorySchema = new mongoose.Schema({
 	name: {
 		type: String,
@@ -15,5 +15,5 @@ const categorySchema = new mongoose.Schema({
 	],
 });
 
-// Export the Tags model
+// Export the category model
 module.exports = mongoose.model("Category", categorySchema);

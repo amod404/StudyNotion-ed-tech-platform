@@ -1,6 +1,6 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User")
-
+const schedule = require('node-schedule');
 
 exports.updateProfile = async (req,res) =>{
     try{
@@ -110,4 +110,16 @@ exports.getUserDetails = async (req,res) =>{
 
 
 
-//Hw -> how can u schedule the request say 5 days
+// Schedule a job to run 5 days from now
+const date = new Date();
+date.setDate(date.getDate() + 5);
+
+schedule.scheduleJob(date, async function() {
+    try {
+        // Your scheduled task logic here
+        console.log('Scheduled task executed after 5 days');
+        // You can add any function you want to execute here
+    } catch (err) {
+        console.error('Error executing scheduled task:', err);
+    }
+});

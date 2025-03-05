@@ -127,5 +127,52 @@ exports.getAllRating = async (req,res) => {
 
 //HW -> course ke behalf be rating lao
 
+exports.getRatingAndReview = async (req,res) => {
+    try{
+        //fetch the course ID
+        const {courseId} = req.body;
+
+        //validate
+        if(!courseId){
+            return res.status(403).json({
+                success:false,
+                message:"course Id is undefined"
+            })
+        }
+
+        //find the rating associated
+        const details = await Course.findById(courseId,
+            {
+                courseName:true,
+                instructor:true,
+                ratingAndReviews:true,
+            }
+        )
+        .populate("ratingAndReviews")
+
+        //check is details are not undefined
+        if(!details){
+            return res.status(404).json({
+                success:false,
+                message:"Course do not exist"
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            data:details,
+            message:"Rating and Review fetch successfully."
+        })
+
+    } catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success:false,
+            error:err.message,
+            message:"Something went wrong , please try again."
+        });
+    }
+}
+
 
 
