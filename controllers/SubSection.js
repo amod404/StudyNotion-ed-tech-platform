@@ -120,7 +120,6 @@ exports.updateSubSection = async (req,res) => {
     }    
 }
 
-//pending , how to update the url  ->  have to delete from cloudnary and update new one
 
 exports.deleteSubSection = async (req,res) => {
     try{

@@ -87,11 +87,10 @@ exports.updateSection = async (req,res) => {
 exports.deleteSection = async (req,res) => {
     try{
         //get ID --> assuming that Id is in param
-        const {sectionId, courseId} = req.params
+        const {sectionId, courseId} = req.body
 
         //find by id and delete
         await Section.findByIdAndDelete(sectionId);
-
         //course ke array se bhi delet krni hogi
         await Course.findByIdAndUpdate(
             courseId,

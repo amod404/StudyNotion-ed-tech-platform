@@ -124,9 +124,7 @@ exports.getAllRating = async (req,res) => {
     }
 }
 
-
 //HW -> course ke behalf be rating lao
-
 exports.getRatingAndReview = async (req,res) => {
     try{
         //fetch the course ID

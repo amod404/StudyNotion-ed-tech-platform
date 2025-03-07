@@ -35,12 +35,13 @@ const courseSchema = new mongoose.Schema({
     },
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Category,"
+        ref:"Category"
     },
     studentsEnrolled:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
     }]
+    
 });
 
 module.exports = mongoose.model("Course", courseSchema);

@@ -20,7 +20,7 @@ exports.sendOTP = async (req,res) => {
 
         //if user alread exist, then return a response
         if(checkUserPresent){
-            return res.status(401),json({
+            return res.status(401).json({
                 success:false,
                 message:'User already registered'
             });
@@ -53,7 +53,7 @@ exports.sendOTP = async (req,res) => {
         console.log("faied in authautication -> ", err);
         return res.status(500).json({
             success:false,
-            message:""
+            message:"something went wrong"
         })   
     }
 }
@@ -64,7 +64,8 @@ exports.signUp = async(req,res) => {
     try{
         //data fetch from request ki body (this is coming from UI/frontend)
         const {firstName, lastName, email, password, confirmPassword,accountType,contactNumber,otp} = req.body;
-        
+        // console.log(email);
+
         // validate krlo
         if(!firstName || !lastName || !email || !password || !confirmPassword || !contactNumber || !otp){
             return res.status(403).json({
@@ -83,25 +84,28 @@ exports.signUp = async(req,res) => {
 
         // check user already exists or not
         const existingUser = await User.findOne({email});
+        console.log("->>>>",existingUser);
         if(existingUser){
-            return res.status().json({
+            return res.status(401).json({
                 success:false,
                 messae:"User is already registered"
             })
         }
 
         // find the most recent OTP stored for the user
-        const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
-        console.log(recentOtp);
+        const recentOtp = await OTP.findOne({email}).sort({createdAt:-1}).limit(1);
+        // console.log(recentOtp);
         // validat OTP
-        if(recentOtp && recentOtp.length() == 0){
+        if(recentOtp && recentOtp.length === 0){
             //OTP not founded
             return res.status(405).json({
                 succ:false,
                 message:'OTP not found'
             })
         }
-        else if(recentOtp.otp != otp){
+        else if(recentOtp.otp !== otp){
+            console.log(recentOtp.otp)
+            console.log(otp)
             return res.status(406).json({
                 success:false,
                 message:"Invalid OTP",
@@ -113,13 +117,13 @@ exports.signUp = async(req,res) => {
         // Make a empty profile and save in db
         const profileDetails = await Profile.create({
             gender:null,
-            dateOfBirst:null,
+            dateOfBirth:null,
             about:null,
             contactNumber:null,
         });
 
         // entry create in DB
-        const imgUrl = initialImage(firstName,lastName);
+        const imgUrl = `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`;
         const user = await User.create({
             firstName,lastName,email,contactNumber,accountType,
             password:hashedPassword,
@@ -143,10 +147,6 @@ exports.signUp = async(req,res) => {
     }
 
 }
-
-
-
-
 
 //login
 
@@ -181,7 +181,7 @@ exports.login = async (req,res) => {
             const token = jwt.sign(payload,process.env.JWT_SECRET,{
                 expiresIn:"2h",
             });
-            user = user.toObject();
+            // user = user.toObject();
             user.token = token;
             user.password = undefined;
             
@@ -191,7 +191,7 @@ exports.login = async (req,res) => {
                 httpOnly:true
             }
 
-            res.cookie("token", token, options).status(200).json({
+            res.cookie("token", token, option).status(200).json({
                 success:true,
                 token,
                 user,
@@ -208,7 +208,7 @@ exports.login = async (req,res) => {
         console.log('Error in login -> ', err)
         return res.status(500).json({
             success:false,
-            message:'ogin Failure, please try again'
+            message:'login Failure, please try again'
         });
     }
 
